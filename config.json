@@ -1,0 +1,16 @@
+{
+  "gemini_api_key": "AIzaSyAR1-FxMRjbDwT6dDhvffBKk7n-5Km6TaY",
+  "target_urls": [
+    "https://www.pmc.gov.in/en/election?year=2025",
+    "https://www.wikipedia.org"
+  ],
+  "output_directory": "reports",
+  "data_directory": "data",
+  "analysis_metrics": [
+    "page_speed",
+    "meta_tags",
+    "heading_structure",
+    "image_optimization",
+    "mobile_friendly"
+  ]
+}

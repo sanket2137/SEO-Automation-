@@ -1,0 +1,14 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+data/*.json
+data/*.csv
+reports/*.md
+reports/*.pdf
+reports/*.txt
+*.log
+.vscode/
+.idea/

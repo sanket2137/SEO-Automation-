@@ -1,0 +1,539 @@
+"""
+Report Generator Module
+Creates comprehensive SEO reports in multiple formats (Markdown, HTML, JSON)
+"""
+
+import json
+from datetime import datetime
+from typing import Dict, Any, List
+import os
+
+
+class ReportGenerator:
+    """Generate comprehensive SEO reports"""
+    
+    def __init__(self, output_dir: str = "reports"):
+        self.output_dir = output_dir
+        os.makedirs(output_dir, exist_ok=True)
+    
+    def generate_full_report(self, 
+                           analysis: Dict[str, Any], 
+                           ai_insights: Dict[str, Any],
+                           format: str = "markdown") -> str:
+        """Generate complete SEO report"""
+        
+        if format == "markdown":
+            return self._generate_markdown_report(analysis, ai_insights)
+        elif format == "html":
+            return self._generate_html_report(analysis, ai_insights)
+        elif format == "json":
+            return self._generate_json_report(analysis, ai_insights)
+        else:
+            raise ValueError(f"Unsupported format: {format}")
+    
+    def _generate_markdown_report(self, analysis: Dict[str, Any], ai_insights: Dict[str, Any]) -> str:
+        """Generate Markdown report"""
+        
+        url = analysis.get('url', 'Unknown')
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        overall_score = analysis.get('overall_score', 0)
+        scores = analysis.get('category_scores', {})
+        
+        # Determine score emoji
+        if overall_score >= 80:
+            score_emoji = "🟢"
+        elif overall_score >= 60:
+            score_emoji = "🟡"
+        else:
+            score_emoji = "🔴"
+        
+        report = f"""# SEO Analysis Report
+
+**Website:** {url}  
+**Generated:** {timestamp}  
+**Overall Score:** {score_emoji} **{overall_score:.1f}/100**
+
+---
+
+## 📊 Score Breakdown
+
+| Category | Score | Status |
+|----------|-------|--------|
+| 🚀 Performance | {scores.get('performance', 0):.1f}/100 | {self._get_status_badge(scores.get('performance', 0))} |
+| 🔧 Technical SEO | {scores.get('technical_seo', 0):.1f}/100 | {self._get_status_badge(scores.get('technical_seo', 0))} |
+| 📝 On-Page SEO | {scores.get('on_page_seo', 0):.1f}/100 | {self._get_status_badge(scores.get('on_page_seo', 0))} |
+
+---
+
+## 🎯 AI-Powered Insights
+
+{ai_insights.get('ai_insights', 'Insights not available')}
+
+---
+
+## 🔴 Critical Issues
+
+"""
+        critical_issues = [i for i in analysis.get('all_issues', []) if i.get('severity') == 'critical']
+        
+        if critical_issues:
+            for i, issue in enumerate(critical_issues, 1):
+                report += f"""
+### {i}. {issue.get('issue')}
+
+**Category:** {issue.get('category')}  
+**Recommendation:** {issue.get('recommendation', 'N/A')}
+
+"""
+        else:
+            report += "✅ No critical issues found!\n\n"
+        
+        report += """---
+
+## 🟡 Warnings
+
+"""
+        warnings = [i for i in analysis.get('all_issues', []) if i.get('severity') == 'warning']
+        
+        if warnings:
+            for i, warning in enumerate(warnings, 1):
+                report += f"{i}. **{warning.get('issue')}** - {warning.get('recommendation', 'N/A')}\n"
+        else:
+            report += "✅ No warnings!\n"
+        
+        report += """
+
+---
+
+## ✅ Strengths
+
+"""
+        strengths = analysis.get('strengths', [])
+        if strengths:
+            for strength in strengths:
+                report += f"- {strength}\n"
+        else:
+            report += "No specific strengths identified.\n"
+        
+        report += """
+
+---
+
+## 🎁 Opportunities
+
+"""
+        opportunities = analysis.get('opportunities', [])
+        if opportunities:
+            for opp in opportunities:
+                report += f"- {opp}\n"
+        else:
+            report += "No additional opportunities identified.\n"
+        
+        report += f"""
+
+---
+
+## 📈 Detailed Metrics
+
+### Performance Metrics
+- **Performance Score:** {scores.get('performance', 0):.1f}/100
+- **SEO Score:** {scores.get('technical_seo', 0):.1f}/100
+
+### Content Analysis
+- **Title Tag:** {self._get_title_info(analysis)}
+- **Meta Description:** {self._get_meta_desc_info(analysis)}
+- **Heading Structure:** {self._get_heading_info(analysis)}
+- **Image Optimization:** {self._get_image_info(analysis)}
+
+### Technical Details
+- **HTTPS:** {self._get_https_status(analysis)}
+- **Response Time:** {self._get_response_time(analysis)}
+- **Mobile-Friendly:** {self._get_mobile_status(analysis)}
+
+---
+
+## 📋 Summary
+
+This report provides a comprehensive analysis of {url}. The overall SEO score of {overall_score:.1f}/100 indicates that {"immediate action is required" if overall_score < 60 else "there are opportunities for improvement" if overall_score < 80 else "the site is performing well"}.
+
+Focus on addressing the critical issues first, then work through the warnings and opportunities to maximize your SEO potential.
+
+---
+
+*Report generated by AI-Powered SEO Automation System*
+"""
+        return report
+    
+    def _generate_html_report(self, analysis: Dict[str, Any], ai_insights: Dict[str, Any]) -> str:
+        """Generate HTML report"""
+        
+        url = analysis.get('url', 'Unknown')
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        overall_score = analysis.get('overall_score', 0)
+        scores = analysis.get('category_scores', {})
+        
+        # Get score color
+        if overall_score >= 80:
+            score_color = "#22c55e"
+        elif overall_score >= 60:
+            score_color = "#eab308"
+        else:
+            score_color = "#ef4444"
+        
+        html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Report - {url}</title>
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }}
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }}
+        h1 {{ color: #1a1a1a; margin-bottom: 20px; font-size: 2.5em; }}
+        h2 {{ color: #2563eb; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #2563eb; padding-bottom: 10px; }}
+        h3 {{ color: #334155; margin-top: 20px; margin-bottom: 10px; }}
+        .header {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }}
+        .header h1 {{ color: white; margin: 0; }}
+        .header .meta {{ opacity: 0.9; margin-top: 10px; }}
+        .score-card {{
+            background: {score_color};
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }}
+        .score-card .score {{ font-size: 3em; font-weight: bold; }}
+        .score-card .label {{ font-size: 1.2em; opacity: 0.9; }}
+        .metrics-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }}
+        .metric-card {{
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }}
+        .metric-card h3 {{ margin-top: 0; font-size: 1.1em; }}
+        .metric-card .value {{ font-size: 2em; font-weight: bold; color: #2563eb; }}
+        .issue {{
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }}
+        .warning {{
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }}
+        .strength {{
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }}
+        .ai-insights {{
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #e0e7ff;
+        }}
+        .ai-insights pre {{
+            white-space: pre-wrap;
+            font-family: inherit;
+        }}
+        ul {{ margin-left: 20px; }}
+        li {{ margin: 8px 0; }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }}
+        th, td {{
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }}
+        th {{
+            background: #f8fafc;
+            font-weight: 600;
+        }}
+        .badge {{
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }}
+        .badge-success {{ background: #dcfce7; color: #166534; }}
+        .badge-warning {{ background: #fef3c7; color: #92400e; }}
+        .badge-danger {{ background: #fee2e2; color: #991b1b; }}
+        .footer {{
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9em;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 SEO Analysis Report</h1>
+            <div class="meta">
+                <strong>Website:</strong> {url}<br>
+                <strong>Generated:</strong> {timestamp}
+            </div>
+        </div>
+        
+        <div class="score-card">
+            <div class="label">Overall SEO Score</div>
+            <div class="score">{overall_score:.1f}</div>
+            <div class="label">out of 100</div>
+        </div>
+        
+        <h2>📊 Score Breakdown</h2>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>🚀 Performance</h3>
+                <div class="value">{scores.get('performance', 0):.0f}</div>
+            </div>
+            <div class="metric-card">
+                <h3>🔧 Technical SEO</h3>
+                <div class="value">{scores.get('technical_seo', 0):.0f}</div>
+            </div>
+            <div class="metric-card">
+                <h3>📝 On-Page SEO</h3>
+                <div class="value">{scores.get('on_page_seo', 0):.0f}</div>
+            </div>
+        </div>
+        
+        <h2>🤖 AI-Powered Insights</h2>
+        <div class="ai-insights">
+            <pre>{ai_insights.get('ai_insights', 'Insights not available')}</pre>
+        </div>
+        
+        <h2>🔴 Critical Issues</h2>
+"""
+        critical_issues = [i for i in analysis.get('all_issues', []) if i.get('severity') == 'critical']
+        
+        if critical_issues:
+            for issue in critical_issues:
+                html += f"""
+        <div class="issue">
+            <h3>{issue.get('issue')}</h3>
+            <p><strong>Category:</strong> {issue.get('category')}</p>
+            <p><strong>Recommendation:</strong> {issue.get('recommendation', 'N/A')}</p>
+        </div>
+"""
+        else:
+            html += '<div class="strength">✅ No critical issues found!</div>'
+        
+        html += """
+        <h2>🟡 Warnings</h2>
+"""
+        warnings = [i for i in analysis.get('all_issues', []) if i.get('severity') == 'warning']
+        
+        if warnings:
+            for warning in warnings:
+                html += f"""
+        <div class="warning">
+            <strong>{warning.get('issue')}</strong> - {warning.get('recommendation', 'N/A')}
+        </div>
+"""
+        else:
+            html += '<div class="strength">✅ No warnings!</div>'
+        
+        html += """
+        <h2>✅ Strengths</h2>
+"""
+        strengths = analysis.get('strengths', [])
+        if strengths:
+            for strength in strengths:
+                html += f'        <div class="strength">✓ {strength}</div>\n'
+        
+        html += """
+        
+        <div class="footer">
+            Report generated by AI-Powered SEO Automation System
+        </div>
+    </div>
+</body>
+</html>
+"""
+        return html
+    
+    def _generate_json_report(self, analysis: Dict[str, Any], ai_insights: Dict[str, Any]) -> str:
+        """Generate JSON report"""
+        
+        report = {
+            "metadata": {
+                "generated_at": datetime.now().isoformat(),
+                "report_version": "1.0"
+            },
+            "url": analysis.get('url'),
+            "overall_score": analysis.get('overall_score'),
+            "category_scores": analysis.get('category_scores'),
+            "critical_issues": [i for i in analysis.get('all_issues', []) if i.get('severity') == 'critical'],
+            "warnings": [i for i in analysis.get('all_issues', []) if i.get('severity') == 'warning'],
+            "strengths": analysis.get('strengths'),
+            "opportunities": analysis.get('opportunities'),
+            "ai_insights": ai_insights,
+            "raw_analysis": analysis
+        }
+        
+        return json.dumps(report, indent=2, ensure_ascii=False)
+    
+    def save_report(self, content: str, filename: str, format: str = "markdown") -> str:
+        """Save report to file"""
+        
+        extensions = {
+            "markdown": ".md",
+            "html": ".html",
+            "json": ".json"
+        }
+        
+        ext = extensions.get(format, ".txt")
+        filepath = os.path.join(self.output_dir, filename + ext)
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+        
+        print(f"📄 Report saved: {filepath}")
+        return filepath
+    
+    def _get_status_badge(self, score: float) -> str:
+        """Get status badge for score"""
+        if score >= 90:
+            return "🟢 Excellent"
+        elif score >= 75:
+            return "🟢 Good"
+        elif score >= 60:
+            return "🟡 Fair"
+        elif score >= 40:
+            return "🟠 Poor"
+        else:
+            return "🔴 Critical"
+    
+    def _get_title_info(self, analysis: Dict[str, Any]) -> str:
+        """Get title tag information"""
+        onpage = analysis.get('on_page_seo', {})
+        if 'error' in onpage:
+            return "N/A"
+        
+        title_length = onpage.get('title_length', 0)
+        if title_length == 0:
+            return "❌ Missing"
+        elif 30 <= title_length <= 60:
+            return f"✅ {title_length} characters (optimal)"
+        else:
+            return f"⚠️ {title_length} characters (needs adjustment)"
+    
+    def _get_meta_desc_info(self, analysis: Dict[str, Any]) -> str:
+        """Get meta description information"""
+        onpage = analysis.get('on_page_seo', {})
+        if 'error' in onpage:
+            return "N/A"
+        
+        length = onpage.get('meta_description_length', 0)
+        if length == 0:
+            return "❌ Missing"
+        elif 120 <= length <= 160:
+            return f"✅ {length} characters (optimal)"
+        else:
+            return f"⚠️ {length} characters (needs adjustment)"
+    
+    def _get_heading_info(self, analysis: Dict[str, Any]) -> str:
+        """Get heading structure information"""
+        onpage = analysis.get('on_page_seo', {})
+        if 'error' in onpage:
+            return "N/A"
+        
+        h1_count = onpage.get('h1_count', 0)
+        if h1_count == 1:
+            return "✅ Proper structure (1 H1)"
+        elif h1_count == 0:
+            return "❌ Missing H1"
+        else:
+            return f"⚠️ Multiple H1 tags ({h1_count})"
+    
+    def _get_image_info(self, analysis: Dict[str, Any]) -> str:
+        """Get image optimization information"""
+        onpage = analysis.get('on_page_seo', {})
+        if 'error' in onpage:
+            return "N/A"
+        
+        total = onpage.get('total_images', 0)
+        missing_alt = onpage.get('images_without_alt', 0)
+        
+        if total == 0:
+            return "No images"
+        elif missing_alt == 0:
+            return f"✅ All {total} images optimized"
+        else:
+            return f"⚠️ {missing_alt}/{total} images missing alt text"
+    
+    def _get_https_status(self, analysis: Dict[str, Any]) -> str:
+        """Get HTTPS status"""
+        technical = analysis.get('technical_seo', {})
+        if 'error' in technical:
+            return "N/A"
+        
+        return "✅ Yes" if technical.get('is_https', False) else "❌ No"
+    
+    def _get_response_time(self, analysis: Dict[str, Any]) -> str:
+        """Get response time"""
+        technical = analysis.get('technical_seo', {})
+        if 'error' in technical:
+            return "N/A"
+        
+        time_ms = technical.get('response_time_ms', 0)
+        if time_ms < 500:
+            return f"✅ {time_ms}ms (fast)"
+        elif time_ms < 2000:
+            return f"⚠️ {time_ms}ms (moderate)"
+        else:
+            return f"❌ {time_ms}ms (slow)"
+    
+    def _get_mobile_status(self, analysis: Dict[str, Any]) -> str:
+        """Get mobile-friendly status"""
+        speed = analysis.get('page_speed', {})
+        if 'error' in speed:
+            return "N/A"
+        
+        return "✅ Yes" if speed.get('mobile_friendly', False) else "❌ No"
+
+
+if __name__ == "__main__":
+    # Test report generation
+    print("Report generator module loaded")

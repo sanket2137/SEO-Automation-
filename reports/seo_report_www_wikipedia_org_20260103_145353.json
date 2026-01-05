@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "generated_at": "2026-01-03T14:53:54.216039",
+    "report_version": "1.0"
+  },
+  "url": "https://www.wikipedia.org",
+  "overall_score": 32.0,
+  "category_scores": {
+    "on_page_seo": 80,
+    "overall": 32.0
+  },
+  "critical_issues": [],
+  "warnings": [
+    {
+      "category": "Performance",
+      "severity": "warning",
+      "issue": "Could not retrieve PageSpeed data",
+      "details": "429 Client Error: Too Many Requests for url: https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https%3A%2F%2Fwww.wikipedia.org&strategy=mobile&category=performance&category=seo&category=accessibility"
+    },
+    {
+      "category": "On-Page SEO",
+      "severity": "warning",
+      "issue": "Title tag too short: 9 characters",
+      "recommendation": "Expand title to 50-60 characters for better SEO"
+    },
+    {
+      "category": "Image Optimization",
+      "severity": "warning",
+      "issue": "1/1 images missing alt text (100%)",
+      "recommendation": "Add descriptive alt text to all images for accessibility and SEO"
+    }
+  ],
+  "strengths": [
+    "Good meta description length: 130 characters",
+    "Proper H1 structure",
+    "Secure HTTPS connection",
+    "Fast response time: 85ms",
+    "robots.txt file present"
+  ],
+  "opportunities": [
+    "Consider expanding content (current: 1086 words)",
+    "Add XML sitemap for better indexing"
+  ],
+  "ai_insights": {
+    "error": "404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "fallback_insights": "\nFALLBACK SEO INSIGHTS FOR https://www.wikipedia.org\n\nOverall Assessment:\nYour site scored 32.0/100. Significant improvements are needed to compete effectively.\n\nPriority Actions:\n\n2. Quick Wins:\n   - Consider expanding content (current: 1086 words)\n   - Add XML sitemap for better indexing\n"
+  },
+  "raw_analysis": {
+    "url": "https://www.wikipedia.org",
+    "timestamp": "2026-01-03T14:53:53.461442",
+    "overall_score": 32.0,
+    "category_scores": {
+      "on_page_seo": 80,
+      "overall": 32.0
+    },
+    "critical_issues": [],
+    "warnings": [
+      {
+        "category": "Performance",
+        "severity": "warning",
+        "issue": "Could not retrieve PageSpeed data",
+        "details": "429 Client Error: Too Many Requests for url: https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https%3A%2F%2Fwww.wikipedia.org&strategy=mobile&category=performance&category=seo&category=accessibility"
+      },
+      {
+        "category": "On-Page SEO",
+        "severity": "warning",
+        "issue": "Title tag too short: 9 characters",
+        "recommendation": "Expand title to 50-60 characters for better SEO"
+      },
+      {
+        "category": "Image Optimization",
+        "severity": "warning",
+        "issue": "1/1 images missing alt text (100%)",
+        "recommendation": "Add descriptive alt text to all images for accessibility and SEO"
+      }
+    ],
+    "all_issues": [
+      {
+        "category": "Performance",
+        "severity": "warning",
+        "issue": "Could not retrieve PageSpeed data",
+        "details": "429 Client Error: Too Many Requests for url: https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https%3A%2F%2Fwww.wikipedia.org&strategy=mobile&category=performance&category=seo&category=accessibility"
+      },
+      {
+        "category": "On-Page SEO",
+        "severity": "warning",
+        "issue": "Title tag too short: 9 characters",
+        "recommendation": "Expand title to 50-60 characters for better SEO"
+      },
+      {
+        "category": "Image Optimization",
+        "severity": "warning",
+        "issue": "1/1 images missing alt text (100%)",
+        "recommendation": "Add descriptive alt text to all images for accessibility and SEO"
+      }
+    ],
+    "opportunities": [
+      "Consider expanding content (current: 1086 words)",
+      "Add XML sitemap for better indexing"
+    ],
+    "strengths": [
+      "Good meta description length: 130 characters",
+      "Proper H1 structure",
+      "Secure HTTPS connection",
+      "Fast response time: 85ms",
+      "robots.txt file present"
+    ],
+    "summary": "SEO Analysis Summary for https://www.wikipedia.org\n============================================================\n\nOverall SEO Score: 32.0/100\n\nCategory Scores:\n- Performance: 0.0/100\n- Technical SEO: 0.0/100\n- On-Page SEO: 80.0/100\n\nIssues Found:\n- Critical Issues: 0\n- Warnings: 3\n\nTop Strengths (5):\n  ✓ Good meta description length: 130 characters\n  ✓ Proper H1 structure\n  ✓ Secure HTTPS connection\n  ✓ Fast response time: 85ms\n  ✓ robots.txt file present\n\nTop Issues:\n  🟡 [Performance] Could not retrieve PageSpeed data\n  🟡 [On-Page SEO] Title tag too short: 9 characters\n     → Expand title to 50-60 characters for better SEO\n  🟡 [Image Optimization] 1/1 images missing alt text (100%)\n     → Add descriptive alt text to all images for accessibility and SEO\n\nOpportunities for Improvement:\n  ✓ Consider expanding content (current: 1086 words)\n  ✓ Add XML sitemap for better indexing"
+  }
+}
